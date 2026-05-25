@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NSIDirectory</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="brand">
+      <h1>NSIDirectory</h1>
+      <p>Database</p>
+    </header>
+
+    <section class="hero-banner" aria-label="NSI Directory hero banner">
+      <img src="NSID Landscape.png" alt="Nakamoto Stamp Art Directory banner" />
+      <div class="hero-copy">
+        <h1>NAKAMOTO</h1>
+      </div>
+    </section>
+
+    <section class="layout">
+      <aside class="panel left">
+        <h2 id="pfp-number">#1</h2>
+        <div id="pfp-preview" aria-label="Selected NSI asset preview"></div>
+        <button id="generate-btn" class="action-btn">Random</button>
+
+        <div class="attrs">
+          <h3>Attributes</h3>
+          <div class="attrs-grid" id="attrs-grid"></div>
+        </div>
+      </aside>
+
+      <section class="panel right">
+        <div class="right-layout">
+          <div class="gallery-shell">
+            <div class="gallery" id="gallery"></div>
+            <div class="pagination" id="pagination">
+              <button id="first-btn" class="page-btn">◄◄</button>
+              <button id="prev-btn" class="page-btn">◄</button>
+              <button id="next-btn" class="page-btn">►</button>
+              <button id="last-btn" class="page-btn">►►</button>
+            </div>
+          </div>
+
+          <aside class="filter-panel">
+            <h3>Metadata Filter</h3>
+            <div id="filter-controls" class="filter-controls"></div>
+            <button id="clear-filters" class="filter-btn">Clear Filters</button>
+            <button id="theme-toggle" class="filter-btn">Dark Mode: Off</button>
+          </aside>
+        </div>
+      </section>
+    </section>
+
+    <section class="golden-canvas">
+      <iframe src="golden canvas.html" title="Golden Canvas" loading="lazy"></iframe>
+    </section>
+
+    <footer class="footer"><span id="count">0</span> assets in current index</footer>
+  </main>
+
+  <script src="assets/assets_manifest.js?v=20260524-2259"></script>
+  <script src="traits-manifest.js?v=20260524-2259"></script>
+  <script src="app.js?v=20260524-2259"></script>
+</body>
+</html>

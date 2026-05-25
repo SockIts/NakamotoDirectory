@@ -1,0 +1,92 @@
+:root {
+  /* Bitoshi #23-inspired palette (Scream + Fire Eyes + Red Flame) */
+  --bg: #c8c0ba;
+  --ink: #3f3533;
+  --line: #5c4a47;
+  --panel: #d7cdc5;
+  --btn: #8a3d37;
+  --btn-hover: #722e2a;
+  --active: #a33f33;
+  --gallery-bg: #e7dfd9;
+  --gallery-tile-bg: #d8cbc3;
+  --gallery-tile-line: #8f7c74;
+  --tooltip-bg: rgba(84, 34, 30, 0.92);
+  --tooltip-fg: #f6ebe6;
+}
+body.dark {
+  --bg: #2c2626;
+  --ink: #e6d7cf;
+  --line: #7a5951;
+  --panel: #3a3030;
+  --btn: #a2473f;
+  --btn-hover: #8b3933;
+  --active: #f06f5e;
+  --gallery-bg: #2f2828;
+  --gallery-tile-bg: #463838;
+  --gallery-tile-line: #7f615a;
+  --tooltip-bg: rgba(21, 15, 15, 0.95);
+  --tooltip-fg: #f8ece6;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Courier New", Courier, monospace; min-height: 100vh; padding: 14px; image-rendering: pixelated; }
+.shell { max-width: 1400px; margin: 0 auto; }
+.hero-banner { position: relative; width: 100%; height: min(42vw, 465px); border: 3px solid var(--line); overflow: hidden; margin-bottom: 14px; background: #222; }
+.hero-banner img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero-copy { position: absolute; top: 8%; left: 50%; transform: translateX(-50%); text-align: center; color: #f3f0e9; text-shadow: 0 2px 10px rgba(0,0,0,0.35); }
+.hero-copy h1 { margin: 0; font-family: Georgia, "Times New Roman", serif; letter-spacing: 8px; font-size: clamp(36px, 8vw, 124px); font-weight: 500; }
+.brand { text-align: center; margin-bottom: 12px; }
+.brand h1 { margin: 0; font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif; font-size: 74px; line-height: 0.9; letter-spacing: 1px; }
+.brand p { margin: 8px 0 0; text-transform: uppercase; letter-spacing: 6px; font-size: 16px; }
+.layout { display: grid; grid-template-columns: 430px 1fr; gap: 14px; }
+.panel { border: 3px solid var(--line); background: var(--panel); padding: 18px; }
+.left h2 { margin: 0 0 10px; font-size: 24px; text-align: center; }
+#pfp-preview { width: 100%; aspect-ratio: 1 / 1; border: 2px solid var(--line); display: block; background: #c5b7ad; overflow: hidden; position: relative; }
+#pfp-preview > img, #pfp-preview > iframe { width: 100%; height: 100%; display: block; border: 0; }
+#pfp-preview > img { object-fit: contain; }
+.action-btn { margin-top: 14px; width: 100%; height: 52px; border: none; border-radius: 5px; background: var(--btn); color: #e8ebf0; text-transform: uppercase; font-family: inherit; font-size: 28px; letter-spacing: 1px; font-weight: 700; cursor: pointer; }
+.action-btn:hover { background: var(--btn-hover); }
+.attrs { margin-top: 18px; border-top: 3px solid var(--line); padding-top: 14px; }
+.attrs h3 { margin: 0 0 10px; text-transform: uppercase; font-size: 20px; }
+.attrs-grid { display: grid; grid-template-columns: auto 1fr; gap: 9px 16px; text-transform: uppercase; font-size: 16px; font-weight: 700; }
+.attrs-grid span[data-key] { transition: color 180ms ease, transform 180ms ease; }
+.attrs-grid span[data-key].active { color: var(--active); transform: translateX(4px); }
+.right { display: flex; flex-direction: column; }
+.right-layout { display: grid; grid-template-columns: 1fr 170px; gap: 14px; align-items: start; }
+.gallery-shell { min-height: 0; display: flex; flex-direction: column; }
+.filter-panel { border: 2px solid var(--line); background: #e7dfd9; padding: 10px; }
+.filter-panel h3 { margin: 0 0 10px; text-transform: uppercase; font-size: 18px; border-bottom: 2px solid var(--line); padding-bottom: 8px; }
+.filter-controls { display: grid; gap: 8px; }
+.filter-row label { display: block; font-size: 12px; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+.filter-row select { width: 100%; background: #d8cbc3; border: 1px solid #8f7c74; color: var(--ink); font-family: inherit; font-size: 12px; padding: 6px; }
+.filter-btn { margin-top: 10px; width: 100%; border: none; border-radius: 5px; background: var(--btn); color: #f2e7e2; font-family: inherit; font-size: 14px; text-transform: uppercase; font-weight: 700; padding: 10px 8px; cursor: pointer; }
+.filter-btn:hover { background: var(--btn-hover); }
+.gallery { border: 2px solid var(--line); background: var(--gallery-bg); padding: 3px; display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 3px; height: 800px; overflow-y: auto; overflow-x: hidden; align-content: start; }
+.gallery-item { position: relative; border: 1px solid var(--gallery-tile-line); background: var(--gallery-tile-bg); width: 100%; height: 0; padding-bottom: 100%; overflow: hidden; }
+.gallery-item > .library-tile, .gallery-item > .library-tile-frame, .gallery-item > .tooltip { position: absolute; inset: 0; }
+.library-tile { width: 100%; height: 100%; display: block; object-fit: cover; }
+.tooltip { background: var(--tooltip-bg); color: var(--tooltip-fg); display: none; align-items: left; justify-content: center; text-align: left; padding: 6px; font-size: 8px; line-height: 1; text-transform: uppercase; }
+.gallery-item:hover .tooltip { display: flex; }
+.gallery-item.selected { outline: 2px solid var(--active); outline-offset: -2px; }
+.pagination { margin-top: 18px; border-top: 2px solid var(--line); padding-top: 18px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; }
+.page-btn { height: 64px; border: none; border-right: 1px solid #6f504b; background: #5d413d; color: #f2e7e2; font-family: inherit; font-size: 34px; cursor: pointer; }
+.page-btn:last-child { border-right: none; }
+.page-btn:hover:not(:disabled) { background: #492f2b; }
+.page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.golden-canvas { margin-top: 14px; background: #c3bbb3; border: 3px solid var(--line); padding: 8px; }
+.golden-canvas iframe { width: 100%; height: 950px; border: 2px solid var(--line); display: block; background: #c3bbb3; }
+.footer { text-align: center; margin-top: 16px; font-size: 34px; }
+@media (max-width: 1000px) {
+  .layout { grid-template-columns: 1fr; }
+  .right-layout { grid-template-columns: 1fr; }
+  .gallery-shell { min-height: 560px; }
+  .gallery { height: 460px; }
+  .hero-banner { height: min(66vw, 420px); }
+  .hero-copy { top: 10%; }
+  .attrs-grid { font-size: 22px; }
+  .left h2 { font-size: 40px; }
+  .action-btn { font-size: 22px; }
+  .brand h1 { font-size: 56px; }
+  .page-btn { font-size: 24px; height: 52px; }
+  .golden-canvas iframe { height: 1250px; }
+}
+.library-tile-frame { width: 100%; height: 100%; border: 0; display: block; }

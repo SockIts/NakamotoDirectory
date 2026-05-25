@@ -1,0 +1,231 @@
+{
+  "version": 1,
+  "canvas": {
+    "width": 25,
+    "height": 25
+  },
+  "layers": [
+    {
+      "key": "index10",
+      "label": "Index 10",
+      "groups": [
+        {
+          "weight": 100,
+          "bucket": "100",
+          "files": [
+            {
+              "name": "title: \"Naka_Index10_STAMP01\",",
+              "asset": "A1286795239919077352",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP01\",.jpeg\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP02\",",
+              "asset": "A8353632026816908000",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP02\",.gif\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP03\",",
+              "asset": "A1789034656839158014",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP03\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP04\",",
+              "asset": "A5084118127176365000",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP04\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP05\",",
+              "asset": "A333333033333333303",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP05\",.gif\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP06\",",
+              "asset": "A14731337325289041353",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP06\",.gif\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP07\",",
+              "asset": "A15116968135377965000",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP07\",.gif\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP08\",",
+              "asset": "A3059619110185716700",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP08\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP09\",",
+              "asset": "A1062191901403696910",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP09\",.gif\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP10\",",
+              "asset": "A1179249534999263500",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP10\",.jpeg\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP11\",",
+              "asset": "A1050885508341964502",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP11\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP12\",",
+              "asset": "A583391351782462942",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP12\",.gif\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP13\",",
+              "asset": "A12308399887884118991",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP13\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP14\",",
+              "asset": "A202400000006900001",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP14\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP15\",",
+              "asset": "A3121984346241143000",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP15\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP16\",",
+              "asset": "A256247256247256247",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP16\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP17\",",
+              "asset": "A4205555555555555569",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP17\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP18\",",
+              "asset": "A4079775503418712723",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP18\",.gif\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP19\",",
+              "asset": "A6524912715479370914",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP19\",.svg\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP20\",",
+              "asset": "A17184273593537200045",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP20\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP21\",",
+              "asset": "A9541761320113641481",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP21\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP22\",",
+              "asset": "A10000000000000001982",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP22\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP23\",",
+              "asset": "A9948766013270272000",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP23\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP24\",",
+              "asset": "A8307851130374246000",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP24\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP25\",",
+              "asset": "A6209941760867399000",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP25\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP26\",",
+              "asset": "A1081546258343164434",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP26\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP27\",",
+              "asset": "A301200900000000000",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP27\",.svg\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP28\",",
+              "asset": "A10825829342152884000",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP28\",.svg\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP29\",",
+              "asset": "A9494624877119506000",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP29\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP30\",",
+              "asset": "A241301191507000016",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP30\",.html\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP31\",",
+              "asset": "A4657262672172080712",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP31\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP32\",",
+              "asset": "A5572732321608792481",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP32\",.svg\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP33\",",
+              "asset": "A829806088834668848",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP33\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP34\",",
+              "asset": "A6148550427186004000",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP34\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP35\",",
+              "asset": "A8042510438924704804",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP35\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP36\",",
+              "asset": "A13371337133713370001",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP36\",.svg\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP37\",",
+              "asset": "A10832907201819087000",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP37\",.svg\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP38\",",
+              "asset": "A2636439741159560000",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP38\",.png\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP39\",",
+              "asset": "A1087244158713077636",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP39\",.svg\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP40\",",
+              "asset": "A8880008880008880000",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP40\",.gif\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP41\",",
+              "asset": "A9326324522081700000",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP41\",.html\","
+            },
+            {
+              "name": "title: \"Naka_Index10_STAMP42\",",
+              "asset": "A16602158856562446000",
+              "path": "traits/index10/common/title: \"Naka_Index10_STAMP42\",.gif\","
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

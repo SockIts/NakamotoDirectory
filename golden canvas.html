@@ -1,0 +1,936 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NSID Stamp Gallery</title>
+    <style>
+        body {
+            padding: 40px;
+            background: #d7cdc5;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            place-content: center;
+            overflow: visible;
+            margin: 20px;
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 300;
+            text-align: center;
+            color: #333;
+            text-shadow: rgba(0, 0, 0, 0.05) 1px 1px 2px;
+            width: 700px;
+            margin: 0;
+        }
+        .content-container {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            justify-content: center;
+            align-items: flex-start;
+            width: 100%;
+            max-width: 880px;
+        }
+        .image-frame-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 400px;
+            max-height: 700px;
+            box-sizing: border-box;
+        }
+        .frame {
+            padding: 2%;
+            border-width: 12px;
+            border-style: solid;
+            border-color: #2F2D2D #434040 #4F4C4C #434040;
+            background-image: linear-gradient(#E5E4DF, #CDCDC6);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,.6), 0 5px 2px rgba(0,0,0,.1), 0 10px 20px rgba(0,0,0,.8);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 400px;
+            min-height: 400px;
+            box-sizing: border-box;
+        }
+        .frame::after {
+            content: "";
+            position: absolute;
+            top: -370px;
+            right: -70%;
+            width: 500px;
+            height: 500px;
+            transform: rotateZ(-45deg);
+            background-image: -webkit-gradient(linear, 0 0, 0 80%, from(rgba(255,255,255,.5)), to(rgba(255,255,255,0)));
+        }
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            image-rendering: pixelated;
+            width: 100%;
+            height: 100%;
+            max-width: 500px;
+            max-height: 600px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .container.loading::before {
+            content: "";
+            display: block;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #ccc;
+            border-top-color: #333;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        img {
+            width: 400px;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+            border-width: 2px;
+            border-style: solid;
+            border-color: #BBBAB4 #C7C7BF #E5E4DF #C7C7BF;
+            box-shadow: 0 -1px 1px rgba(0,0,0,.1), 0 1px 1px 1px rgba(255,255,255,.7);
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 0.5s ease-in-out;
+            cursor: auto;
+        }
+        .zoomed {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw;
+            max-width: 80vw;
+            max-height: 80vh;
+            z-index: 1000;
+            border-width: 10px;
+            border-style: solid;
+            border-color: #BBBAB4 #C7C7BF #E5E4DF #C7C7BF;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        .zoomed-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none;
+        }
+        .zoomed-overlay.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(200px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        iframe {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            min-height: 400px;
+            border: none;
+            border-radius: 2px;
+            transform: scale(1);
+            transform-origin: center;
+            animation: scaleAnim 5s infinite alternate;
+            z-index: 1;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        iframe body img {
+            max-width: 100%;
+            min-height: 400px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+        }
+        .button-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 440px;
+        }
+        .nav-button-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            width: 440px;
+        }
+        button {
+            background: rgb(224, 224, 224);
+            width: 100px;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: rgb(85, 85, 85);
+            cursor: pointer;
+            box-shadow: rgb(190, 190, 190) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;
+            transition: all 0.2s ease-in-out;
+        }
+        button:hover {
+            background: rgb(240, 240, 240);
+            box-shadow: rgb(190, 190, 190) 3px 3px 6px, rgb(255, 255, 255) -3px -3px 12px;
+            transform: translateY(-2px);
+        }
+        button:active {
+            background: rgb(200, 200, 200);
+            box-shadow: rgb(190, 190, 190) 2px 2px 4px inset, rgb(255, 255, 255) -4px -4px 8px inset;
+            transform: translateY(1px);
+        }
+        button:disabled {
+            background: rgb(204, 204, 204);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .buy-now {
+            background: rgb(224, 224, 224);
+            width: 100px;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: rgb(85, 85, 85);
+            cursor: pointer;
+            box-shadow: rgb(190, 190, 190) 4px 4px 8px, rgb(255, 255, 255) -4px -4px 8px;
+            transition: all 0.2s ease-in-out;
+        }
+        .buy-now:hover {
+            background: linear-gradient(45deg, #45A049, #5DAE61);
+            transform: translateY(-2px);
+        }
+        .buy-now:active {
+            transform: translateY(1px);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2) inset;
+        }
+        .pagination-group button {
+            width: 80px;
+        }
+        .pagination-group button.active {
+            background: rgb(180, 180, 180);
+            box-shadow: rgb(190, 190, 190) 2px 2px 2px inset, rgb(255, 255, 255) -4px -4px 4px inset;
+        }
+        .counter {
+            background: #e0e0e0;
+            border-radius: 8px;
+            padding: 6px 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) inset;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.85rem;
+            min-width: 100px;
+            text-align: center;
+        }
+        .stamp-details {
+            width: 600px;
+            font-family: "Courier New", monospace;
+            font-size: 1rem;
+            word-wrap: break-word;
+            color: #333;
+            margin: 0;
+            text-align: center;
+            line-height: 1.2;
+        }
+        .stamp-description-container {
+            width: 500px;
+            max-height: 460px;
+            overflow-y: auto;
+            font-family: "Courier New", monospace;
+            font-size: 0.8rem;
+            color: #333;
+            margin: 0;
+            text-align: left;
+            line-height: 1;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* Internet Explorer and Edge */
+            display: none; /* Initially hidden */
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            transform: translateX(20px);
+        }
+        .stamp-description-container.visible {
+            display: block;
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .stamp-description-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, and Opera */
+        }
+        .stamp-description-container pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .stamp-desc-container {
+            width: 500px;
+            max-height: 460px;
+            overflow-y: auto;
+            font-family: "Courier New", monospace;
+            font-size: 0.8rem;
+            color: #333;
+            margin: 0;
+            text-align: left;
+            line-height: 1;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* Internet Explorer and Edge */
+            display: none; /* Initially hidden */
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            transform: translateX(20px);
+        }
+        .stamp-desc-container.visible {
+            display: block;
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .stamp-desc-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, and Opera */
+        }
+        .stamp-desc-container pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .intro-text {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 0.9rem;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+            max-width: 350px;
+            line-height: 1.4;
+        }
+        .stamp-intro-text {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 0.9rem;
+            color: #333;
+            text-align: auto;
+            padding: 20px;
+            max-width: 450px;
+            line-height: 1.4;
+           margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .data-button-container {
+            width: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .data-button-container.visible {
+            display: flex;
+        }
+        .thumbnail-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            max-width: 880px;
+            margin-top: 20px;
+        }
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border: 2px solid #BBBAB4;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+           filter: grayscale(0.9);
+          
+        }
+        .thumbnail:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+           filter: grayscale(0);
+        }
+        .thumbnail.active {
+            border-color: #45A049;
+            box-shadow: 0 0 8px rgba(69,160,73,0.5);
+        }
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+                margin: 10px;
+            }
+            h1 {
+                font-size: 1.5rem;
+                max-width: 100%;
+            }
+            .content-container {
+                flex-direction: column;
+                gap: 10px;
+               align-items: center;
+               place-content: center;
+            }
+            .image-frame-container {
+                width: 100%;
+                max-width: 390px;
+            }
+            .frame {
+                width: 100%;
+                max-width: 410px;
+                min-height: 320px;
+                border-width: 6px;
+            }
+            .container {
+                max-width: 410px;
+                max-height: 500px;
+                min-height: 320px;
+            }
+            img {
+                width: 340px;
+                max-height: 760px;
+            }
+            .zoomed {
+                width: 90vw;
+                max-width: 90vw;
+                max-height: 90vh;
+            }
+            iframe {
+                max-width: 350px;
+                min-height: 250px;
+                max-height: 400px;
+            }
+            .button-group, .nav-button-group {
+                max-width: 390px;
+                gap: 10px;
+            }
+            button {
+                width: 70px;
+                font-size: 0.65rem;
+                padding: 4px;
+            }
+            .counter {
+                min-width: 70px;
+                font-size: 0.7rem;
+                padding: 4px 8px;
+            }
+            .stamp-details {
+                max-width: 390px;
+                font-size: 0.8rem;
+            }
+            .stamp-description-container, .stamp-desc-container {
+                width: 100%;
+                max-width: 390px;
+                font-size: 0.7rem;
+                max-height: 340px;
+                margin-top: 10px;
+                transform: translateY(20px); /* Vertical animation for mobile */
+                transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+                overflow-y: auto;
+            }
+            .stamp-description-container.visible, .stamp-desc-container.visible {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            .data-button-container {
+                width: 100%;
+                max-width: 390px;
+                display: none !important;
+            }
+            .stamp-description-container, .stamp-desc-container {
+                display: none !important;
+            }
+            .intro-text, .stamp-intro-text {
+                font-size: 0.75rem;
+                padding: 10px;
+                max-width: 100%;
+            }
+            .thumbnail-gallery {
+                max-width: 390px;
+                gap: 8px;
+            }
+            .thumbnail {
+                width: 82px;
+                height: 82px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="zoomed-overlay" id="zoomed-overlay"></div>
+    <h1>The Golden Canvas</h1><br>
+    <div class="button-group">
+        <button onclick="generateRandomStamp()">Random</button>
+        <button onclick="resetForm()">Reset</button>
+    </div>
+    <div class="nav-button-group">
+        <button onclick="navigateStamp(-1)">← Previous</button>
+        <div class="counter" id="stamp-counter">0 of 0</div>
+        <button onclick="navigateStamp(1)">Next →</button>
+    </div><br>
+    <div class="content-container">
+        <div class="image-frame-container">
+            <div class="frame">
+                <div class="container" id="stamp-preview">
+                    <div class="front">
+                        <div class="intro-text">
+                            Compressionism, The Craft of Intentional Reduction.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="data-button-container" id="data-button-container">
+                <button onclick="toggleStampDescription()">Onchain Data</button>
+                <button onclick="toggleStampDesc()">Description</button>
+            </div>
+        </div>
+        <div class="stamp-description-container" id="stamp-description-container">
+            <pre id="stamp-description"></pre>
+        </div>
+        <div class="stamp-desc-container" id="stamp-desc-container">
+            <pre id="stamp-desc"></pre>
+        </div>
+    </div>
+    <div class="stamp-details"><br>
+        <p id="stamp-info"></p>
+    </div>
+    <div class="thumbnail-gallery" id="thumbnail-gallery"></div>
+    <script>
+        'use strict';
+        // Placeholder for artwork list (to be inserted by user)
+        const artworkList = [
+      
+         
+          {
+    "content": "https://stampchain.io/stamps/5ffa5dc557d57f5f2dd45879f6dc3ba9bd7682bffe32f3d38e28c3928a0b118e.jpeg",
+    "contentType": "image",
+    "title": "None",
+    "stamp": "Stamp# 1121162",
+    "artist": "Artist: Rare Scrilla",
+    "issuance": "Issuance: 1",
+    "score": "100c",
+    "rarity": "Rare",
+    "desc": "Scrilla Ventura, also known as DJ J-Scrilla, Rare Scrilla, or simply Scrilla, is a dynamic artist, DJ, and producer rooted in the DMV (D.C., Maryland, Virginia) area, with a career spanning over a decade in the music industry. His music production is defined by an aggressive yet soulful hip-hop style, blending gritty beats with emotive undertones. Scrilla has collaborated with prominent underground and mainstream rap artists, producing tracks like “Pyrex Picasso” featuring Conway The Machine and Rick Hyde, as well as multiple works with Rome Streetz and ANKHLEJOHN, including “Splash Like Basquiat” and “Gold Slugs.” These tracks showcase his ability to craft cinematic soundscapes that resonate with hip-hop’s raw energy and cultural depth.\n\nIn parallel, Scrilla has been a trailblazer in the cryptoart and NFT space since 2016, emerging as a key figure in the early NFT movement through his creation of Rare Pepe trading cards on Bitcoin’s Counterparty network. His visual art is characterized by psychedelic, vibrant, and surreal aesthetics, often employing a mix of traditional and digital mediums such as pen, marker, glass, paint, AI, and even music to create immersive, audio-visual experiences. Notable works include “CREATIVITY BESTOWED” and “FEELSGOODMAN,” which exemplify his ability to merge cultural memes with high-concept art. Scrilla’s tokenized collectibles, including trading cards, memes, and audio-reactive digital pieces, have gained significant traction in the NFT community.\n\nHis interdisciplinary approach extends to designing album covers, blockchain assets, and mixed-media projects, often under pseudonyms like SCRILLMOJI, a collaboration with Emoji Nakamoto. Scrilla’s collaboration with Ghostface Killah to launch NFT collections on the Bitcoin blockchain highlights his influence in bridging hip-hop and blockchain innovation. His artworks have commanded auction prices between $3,360 and $5,040, reflecting their value in the digital art market. Scrilla continues to push boundaries, merging hip-hop’s cultural legacy with the decentralized ethos of blockchain technology, cementing his role as a visionary in both domains.\n\nX: (@ScrillaVentura)\nInstagram: (@rarescrilla)\nWebsites: https://aotm.gallery/artist/rare-scrilla/",
+    "signature": "Rare Scrilla",
+    "buyLink": "https://stampchain.io/stamp/A6958452267252728000"
+  },
+     
+            {
+    "content": "https://stampchain.io/stamps/56203b68fb273c01f1e93671ba03b89996fa82f006e7d3dc4db3209237bddf94.gif",
+    "contentType": "image",
+    "title": "None",
+    "stamp": "Stamp# 1167947",
+    "artist": "Artist: Solemn",
+    "issuance": "Issuance: 1",
+    "score": "100c",
+    "rarity": "Rare",
+    "desc": "Strangersolemn is a digital artist and NFT creator whose bold, experimental work has carved a unique niche in the cryptoart community. Known for their distinctive, often dark and surreal aesthetic, Strangersolemn’s creations explore themes of introspection and mystery, resonating deeply with collectors who value emotional depth and originality. Their “Dark Shit” collection, featuring 22 items with a floor price of 2.82 ꜩ on Deca Art, showcases their ability to craft visually striking pieces that blend eerie undertones with vibrant digital techniques. Another significant project, “Everyday Strange,” reflects their commitment to creative discipline, as they undertook the challenge of creating a piece of art daily throughout 2022, resulting in 88 minted works on Manifold. This endeavor highlights their dedication to pushing the boundaries of digital art through consistent experimentation.\n\nStrangersolemn’s journey in the NFT space gained significant recognition when they were onboarded as an artist on SuperRare in February 2023, a milestone celebrated with gratitude toward their supporters and the platform’s team. Their work often employs animated GIFs and digital illustrations, creating immersive experiences that captivate viewers. While their personal history remains less documented, Strangersolemn’s contributions to the NFT ecosystem demonstrate a forward-thinking approach, blending technical skill with a unique artistic voice that continues to evolve and inspire within the digital art world.\n\nX: (@strangersolemn)\nInstagram: None identified\nWebsites: https://deca.art/strangersolemn/, https://manifold.xyz/c/everydaystrange",
+    "signature": "Solemn",
+    "buyLink": "https://stampchain.io/stamp/A9259378362897707000"
+  },
+            {
+    "content": "https://stampchain.io/stamps/6f8d7ef43f636956d3de2afbad9317ccebd12117102254eaf38974d422655071.gif",
+    "contentType": "image",
+    "title": "None",
+    "stamp": "Stamp# 1172130",
+    "artist": "Artist: MAX CAPACITY",
+    "issuance": "Issuance: 1",
+    "score": "100c",
+    "rarity": "Rare",
+    "desc": "Max Capacity is a digital artist whose innovative work explores the intersection of analog and digital media, with a particular focus on the aesthetics of obsolete technology. Their art is a vibrant celebration of glitch, AI, pixels, GIFs, text, sound, and video, transforming themes of decay, entropy, and disintegration into visually compelling compositions. Max Capacity’s use of bright colors, dynamic movement, and humor creates a distinctive visual language that finds beauty in the imperfections of outdated tech, blending nostalgia with cutting-edge digital techniques. Their portfolio includes animated GIFs, multimedia installations, and tokenized collectibles, appealing to collectors who appreciate the fusion of retro and futuristic aesthetics.\n\nActive in the NFT space, Max Capacity has collaborated with artists like Desultor on projects such as the “Bear Ride” editions on Manifold, which combine playful creativity with technical innovation. Their work spans various digital formats, showcasing their versatility and experimental spirit. Since entering the cryptoart scene, Max Capacity has established themselves as a pioneer in reimagining technological artifacts, using their art to bridge the gap between analog nostalgia and digital possibility. Their history reflects a deep engagement with digital culture, positioning them as a key figure in the evolution of cryptoart and its exploration of technology’s transient nature.\n\nX: (@maxcapacity)\nInstagram: None identified\nWebsites: https://manifold.xyz/",
+    "signature": "MAX CAPACITY",
+    "buyLink": "https://stampchain.io/stamp/A10735679147743603000"
+  },
+            {
+    "content": "https://stampchain.io/stamps/1003cb8dc3a2540024711e14355e29d6f64ffaeb62ff761f610a84eb0c0f6058.jpeg",
+    "contentType": "image",
+    "title": "None",
+    "stamp": "Stamp# 1182158",
+    "artist": "Artist: Eka Lestienne",
+    "issuance": "Issuance: 1",
+    "score": "100c",
+    "rarity": "Rare",
+    "desc": "Ekaterina Lestienne, known as Eka, is a French digital artist and Crypto Baroque Pioneer whose work masterfully integrates augmented reality, generative code, AI, and code-based art. Since 2023, Eka has focused on Bitcoin-inscribed art, viewing the blockchain’s immutable structure as a canvas for digital rarity and authenticity. Her vibrant, layered compositions, described as ‘energy powerhouses,’ radiate optimism and joy through intricate patterns and bold color palettes. Eka’s art explores themes of human connection, positivity, and technological evolution, creating immersive experiences that resonate with collectors and viewers alike.\n\nEka’s notable achievements include winning the NFT of the Month award and the ‘Unfolding Tales of Cili Regalia’ contest, as well as exhibiting at prestigious venues like Salon d’Automne in Paris, NFT NYC, and NFT Paris. Her collaborations with brands like Netflix and the United Nations’ Gender Equality Program underscore her versatility and global influence. Eka’s creative process combines technical innovation with emotional resonance, using tools like AI and generative coding to craft dynamic, visually stunning pieces. Her contributions to the Bitcoin Ordinals space and her ability to bridge traditional art with blockchain technology have solidified her as a visionary in the cryptoart community, pushing the boundaries of what digital art can achieve.\n\nX: (@ekavibes)\nInstagram: (@ekavibes)\nWebsites: https://ekavibes.art/, https://objkt.com/profile/ekavibes",
+    "signature": "Eka Lestienne",
+    "buyLink": "https://stampchain.io/stamp/A16517349143209587000"
+  },
+  {
+    "content": "https://stampchain.io/stamps/67fcf458e9b785d1d0d42ddd68dceb6693030ddf66ca3bfdb0ca8805f62f6af6.gif",
+    "contentType": "image",
+    "title": "None",
+    "stamp": "Stamp# 1188973",
+    "artist": "Artist: Desultor",
+    "issuance": "Issuance: 1",
+    "score": "100c",
+    "rarity": "Rare",
+    "desc": "Desultor is a versatile artist based in Florida, active since 2018, whose work spans digital and physical mediums with a distinctive ‘crunchy’ aesthetic that blends pixel art, video analog capture, and experimental techniques. Their digital creations, often featuring pixelated compositions and animated GIFs, evoke a retro-futuristic charm, while their physical works, such as acrylic and watercolor paintings, showcase a tactile, hands-on approach. Collections like “Drive-Thru Daydreams” (acrylic paintings on SuperRare) and “Skull Studies” (watercolor on Rarible) highlight their ability to merge traditional craftsmanship with digital innovation. Desultor’s art is infused with humor, spice, and meticulous detail, creating a unique blend of nostalgia and modernity.\n\nIn the NFT space, Desultor has gained recognition through collections like “Death2Fiat” on Foundation, which critiques modern financial systems through bold, expressive visuals, and their collaboration with Max Capacity on the “Bear Ride” editions on Manifold, which showcases their playful yet technical prowess. Their commitment to open licensing (CC0 where acknowledged) reflects a belief in accessible art, fostering community engagement in the cryptoart ecosystem. Desultor’s history is rooted in experimentation, blending retro aesthetics with blockchain technology to create works that resonate with collectors and artists alike, positioning them as a dynamic force in the digital art world.\n\nX: (@desultor)\nInstagram: None identified\nWebsites: https://desultor.art/, https://superrare.com/desultor, https://rarible.com/desultor, https://foundation.app/@desultor",
+    "signature": "Desultor",
+    "buyLink": "https://stampchain.io/stamp/A11261877017444876000"
+  },
+  {
+    "content": "https://stampchain.io/stamps/62f6c3d9d17d6e58813fd772017828f768a9e3b2576975cefa7ec7371efceb76.gif",
+    "contentType": "image",
+    "title": "None",
+    "stamp": "Stamp# 1200450",
+    "artist": "Artist: Lu Ambriz",
+    "issuance": "Issuance: 1",
+    "score": "100c",
+    "rarity": "Rare",
+    "desc": "Lu Ambriz is a Mexican digital artist and producer based in Mexico City, known for her vibrant and dynamic presence in the NFT and digital art communities. As an emerging creator, her work likely incorporates bold, colorful aesthetics and contemporary themes, reflecting her cultural roots and modern influences. While specific details about her artistic portfolio are limited, her engagement in the NFT space suggests a focus on digital illustrations, animations, or tokenized collectibles that resonate with the cryptoart community’s emphasis on innovation and accessibility. Her TikTok presence, where she identifies as an NFT artist and producer, showcases a lively, community-driven approach, often featuring vibrant visuals and personal expressions of creativity.\n\nLu Ambriz’s history in the digital art scene is marked by her participation in the growing NFT ecosystem, likely creating works that blend Mexican cultural elements with digital techniques such as AI, generative art, or animated GIFs. Her content, as seen on social media, suggests an affinity for vivid, playful imagery, possibly inspired by her surroundings and lifestyle, including themes of joy, connection, and cultural pride. As an emerging artist, Lu Ambriz is poised to make a significant impact in the cryptoart space, contributing to the global dialogue around digital creativity and blockchain-based art.\n\nX: (@ByLuaambriz)\nInstagram: (@luaambriz)\nWebsites: https://linktr.ee/luaambriz",
+    "signature": "Lu Ambriz",
+    "buyLink": "https://stampchain.io/stamp/A326391159817538196"
+  },
+  {
+    "content": "https://stampchain.io/stamps/a9ef9df23cf0502cc9136f6915e88a57736a5156be960def6a6e9180ec6e246f.jpeg",
+    "contentType": "image",
+    "title": "None",
+    "stamp": "Stamp# 1208710",
+    "artist": "Artist: Uyo66",
+    "issuance": "Issuance: 1",
+    "score": "100c",
+    "rarity": "Rare",
+    "desc": "Uyo66 is an Indonesian digital artist and freelance illustrator whose work, active since 2014, is a vibrant exploration of modernity’s absurdities, brought to life through grotesquely endearing characters inspired by 1930s rubber hose animation and vintage cartoons. Their signature style combines bold, neon-bright hues—acid pinks, electric blues, and swirling patterns—with a playful yet subversive narrative, creating a visual language that is both nostalgic and avant-garde. Pieces like “Soul” on Foundation exemplify Uyo66’s ability to craft intricate, dynamic compositions filled with quirky characters, psychedelic vibes, and a touch of existential humor, inviting viewers to explore the dissonance of the digital era while embracing joy over cynicism.\n\nUyo66’s creative process blends the elastic, limb-flailing antics of Fleischer Studios-esque figures with contemporary digital techniques, resulting in narrative playgrounds where sentient sausages, geometric aliens, and tentacled teapots coexist in candy-colored dreamscapes. Their work thrives in the NFT space as collectible artifacts, appealing to collectors who value the fusion of retro aesthetics with modern innovation. Uyo66’s history reflects a commitment to pushing artistic boundaries, bridging the analog soul of early animation with the virtual possibilities of blockchain technology, establishing them as a pioneer in both illustration and cryptoart.\n\nX: (@uyo66_)\nInstagram: (@uyo66)\nWebsites: https://www.yooshiq.com/uyo66, https://foundation.app/@uyo66, https://www.inprnt.com/gallery/uyo66/",
+    "signature": "Uyo66",
+    "buyLink": "https://stampchain.io/stamp/A409546000206804250"
+  },
+  {
+    "content": "https://stampchain.io/stamps/9093518d66cd49e38a4e7bfe23b6e55fb1792ff6d28adb7a2275202163c81507.jpeg",
+    "contentType": "image",
+    "title": "None",
+    "stamp": "Stamp# 1208734",
+    "artist": "Artist: Kane Mayfield",
+    "issuance": "Issuance: 1",
+    "score": "100c",
+    "rarity": "Rare",
+    "desc": "Kane Mayfield is a multifaceted artist based in the DMV (D.C., Maryland, Virginia) area, known primarily for his contributions to the hip-hop scene as a rapper and lyricist, with potential involvement in visual or digital art. His musical work is characterized by sharp lyricism, introspective themes, and a raw, authentic connection to the DMV’s vibrant hip-hop culture. Mayfield has collaborated with artists like Scrilla Ventura, notably contributing to the track “Polar Bear 2026” on the album *42069*, where his lyrical delivery anchors the song’s exploration of futuristic and cultural themes, complemented by Bitcoin blockchain audio elements. His music reflects the gritty, soulful energy of the region, addressing issues of identity, resilience, and social commentary.\n\nWhile specific details about his visual art are less documented, Mayfield’s association with the NFT and cryptoart community, particularly through collaborations like *42069* (with cover art by Desultor), suggests he may create or contribute to digital artworks, possibly including album covers, tokenized collectibles, or multimedia projects. His history in the DMV’s creative scene positions him as a key figure in blending hip-hop with emerging digital platforms, potentially exploring visual aesthetics that complement his music’s narrative depth. As an artist, Mayfield continues to evolve, bridging traditional hip-hop with the innovative possibilities of blockchain-based art and music.\n\nX: (@KaneMayfield)\nInstagram: None identified\nWebsites: None identified",
+    "signature": "Kane Mayfield",
+    "buyLink": "https://stampchain.io/stamp/A12293026005812228000"
+  },
+  {
+    "content": "https://stampchain.io/stamps/e6a477b1d2de58a743e7998b22d14b896e44d29ba6e7491bf290711ff556d0fc.jpeg",
+    "contentType": "image",
+    "title": "None",
+    "stamp": "Stamp# 1215418",
+    "artist": "Artist: Gabe Weis",
+    "issuance": "Issuance: 1",
+    "score": "100c",
+    "rarity": "Rare",
+    "desc": "Gabe Weis is a self-taught mixed-media and NFT artist based in the Bay Area, whose work is inspired by urban art, street culture, and stoic philosophy. His stream-of-consciousness approach results in dynamic, thought-provoking pieces that explore perceptions of reality, blending physical and digital mediums with a raw, expressive energy. Weis’s physical works often incorporate recycled materials like cereal boxes, maps, and old dictionaries, reflecting his commitment to sustainability and the transformation of everyday objects into timeless art. His digital creations, including tokenized collectibles and NFTs, showcase bold, abstract forms and vibrant compositions that resonate with the cryptoart community.\n\nWeis has gained international recognition, exhibiting at prestigious venues like the Venice Biennale, Picasso Museum, Seattle Art Fair, and galleries across Asia and the United States. His 5,000-piece NFT collection, *The Stoics*, sold out in minutes, embodying his philosophy of resilience and introspection through digital art. Weis’s artistic journey, marked by a fusion of cubism and urban influences, was notably showcased in Qatar, where he introduced cubist aesthetics to a region dominated by Islamic geometric patterns, fostering a cross-cultural dialogue. His work continues to bridge physical and digital realms, inspiring collectors and artists to rethink the boundaries of art and sustainability.\n\nX: (@GabrielJWeis)\nInstagram: (@gabeweisart)\nWebsites: https://odittogallery.io/gabe-weis, https://www.westbrookmodern.com/artists/gabe-weis",
+    "signature": "Gabe Weis",
+    "buyLink": "https://stampchain.io/stamp/A12293026005812228000"
+  }
+       
+        ];
+        let currentStampIndex = -1; // Initialize to -1 so first "Next" shows stamp #1
+        const stampsPerPage = 500;
+        function createThumbnailGallery() {
+            const gallery = document.getElementById('thumbnail-gallery');
+            gallery.innerHTML = ''; // Clear existing thumbnails
+            artworkList.forEach((artwork, index) => {
+                if (artwork.contentType === 'image') { // Only include images
+                    const thumbnail = document.createElement('img');
+                    thumbnail.src = artwork.content;
+                    thumbnail.alt = artwork.stamp;
+                    thumbnail.classList.add('thumbnail');
+                    if (index === currentStampIndex) {
+                        thumbnail.classList.add('active');
+                    }
+                    thumbnail.addEventListener('click', () => {
+                        currentStampIndex = index;
+                        displayStamp(artwork);
+                        updateCounter();
+                        updateActiveThumbnail();
+                    });
+                    gallery.appendChild(thumbnail);
+                }
+            });
+        }
+        function updateActiveThumbnail() {
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            thumbnails.forEach((thumb, index) => {
+                thumb.classList.toggle('active', index === currentStampIndex);
+            });
+        }
+        async function fetchStampDescription(stampNumber) {
+            try {
+                const response = await fetch(`https://stampchain.io/api/v2/stamps/${stampNumber}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch stamp description');
+                }
+                const data = await response.json();
+                return JSON.stringify(data, null, 2); // Pretty-print JSON
+            } catch (error) {
+                console.error('Error fetching stamp description:', error);
+                return 'Error fetching stamp description';
+            }
+        }
+        async function generateRandomStamp() {
+            if (artworkList.length === 0) return;
+            const randomIndex = Math.floor(Math.random() * artworkList.length);
+            currentStampIndex = randomIndex;
+            const artwork = artworkList[randomIndex];
+            await displayStamp(artwork);
+            updateCounter();
+            updateActiveThumbnail();
+        }
+        async function navigateStamp(direction) {
+            if (artworkList.length === 0) return;
+            const currentPage = Math.floor((currentStampIndex + 1) / stampsPerPage);
+            const pageStart = currentPage * stampsPerPage;
+            const pageEnd = Math.min(pageStart + stampsPerPage - 1, artworkList.length - 1);
+           
+            currentStampIndex += direction;
+            if (currentStampIndex < -1) {
+                currentStampIndex = pageEnd;
+            } else if (currentStampIndex > pageEnd) {
+                currentStampIndex = -1; // Reset to -1 for looping to start
+            }
+            const artwork = artworkList[currentStampIndex];
+            if (artwork) {
+                await displayStamp(artwork);
+            } else {
+                resetForm();
+            }
+            updateCounter();
+            updateActiveThumbnail();
+        }
+        async function displayStamp(artwork) {
+            const previewDiv = document.getElementById('stamp-preview');
+            const stampInfo = document.getElementById('stamp-info');
+            const stampDescription = document.getElementById('stamp-description');
+            const stampDesc = document.getElementById('stamp-desc');
+            const dataButtonContainer = document.getElementById('data-button-container');
+            const overlay = document.getElementById('zoomed-overlay');
+            previewDiv.classList.add('loading');
+            previewDiv.innerHTML = '<div class="front"></div>';
+            if (!artwork) {
+                previewDiv.querySelector('.front').innerHTML = '<div style="color: #333;">Stamp not found</div>';
+                stampInfo.innerText = 'Stamp not found';
+                stampDescription.innerText = 'Stamp not found';
+                stampDesc.innerText = 'Stamp not found';
+                dataButtonContainer.classList.remove('visible');
+                previewDiv.classList.remove('loading');
+                return;
+            }
+            const { content, contentType, stamp, artist, title, buyLink, score, rarity, issuance, desc } = artwork;
+            if (contentType === 'iframe') {
+                previewDiv.querySelector('.front').innerHTML = `
+                    <iframe src="${content}" title="${stamp}" scrolling="no" loading="lazy"></iframe>
+                `;
+            } else {
+                previewDiv.querySelector('.front').innerHTML = `
+                    <img src="${content}" alt="${stamp}" loading="lazy">
+                `;
+            }
+            const element = contentType === 'iframe' ? previewDiv.querySelector('iframe') : previewDiv.querySelector('img');
+            element.addEventListener('error', () => {
+                previewDiv.querySelector('.front').innerHTML = `<div style="color: #333;">Error loading stamp ${contentType === 'iframe' ? 'content' : 'image'}</div>`;
+                stampInfo.innerText = 'Error loading stamp details';
+                stampDescription.innerText = 'Error loading stamp description';
+                stampDesc.innerText = 'Error loading stamp description';
+                dataButtonContainer.classList.remove('visible');
+                previewDiv.classList.remove('loading');
+            });
+            // Click-to-zoom for images
+            if (contentType !== 'iframe') {
+                const img = previewDiv.querySelector('img');
+                img.addEventListener('click', () => {
+                    if (img.classList.contains('zoomed')) {
+                        img.classList.remove('zoomed');
+                        overlay.classList.remove('active');
+                    } else {
+                        img.classList.add('zoomed');
+                        overlay.classList.add('active');
+                    }
+                });
+            }
+            // Display original stamp details
+            stampInfo.innerText = `${issuance}\n${artist}`;
+            // Fetch and display stamp description from API
+            const stampNumber = artwork.stamp.match(/\d+/)[0]; // Extract number from "Stamp# 631429"
+            const stampDescData = await fetchStampDescription(stampNumber);
+            stampDescription.innerText = stampDescData;
+            // Display stamp desc field
+            stampDesc.innerText = desc;
+            // Show the data buttons when displaying a stamp
+            dataButtonContainer.classList.add('visible');
+            previewDiv.classList.remove('loading');
+        }
+        function updateCounter() {
+            const currentPage = Math.floor((currentStampIndex + 1) / stampsPerPage);
+            const pageStart = currentPage * stampsPerPage;
+            const pageEnd = Math.min(pageStart + stampsPerPage, artworkList.length);
+            const stampsInPage = pageEnd - pageStart;
+            const currentPosition = currentStampIndex + 1; // Adjust for 0-based index
+            document.getElementById('stamp-counter').innerText = `${currentPosition < 0 ? 0 : currentPosition} of ${stampsInPage}`;
+        }
+        function resetForm() {
+            const previewDiv = document.getElementById('stamp-preview');
+            const dataButtonContainer = document.getElementById('data-button-container');
+            const overlay = document.getElementById('zoomed-overlay');
+            previewDiv.innerHTML = `
+                <div class="front">
+                    <div class="intro-text">
+                        Compressionism, The Craft of Intentional Reduction.
+                    </div>
+                </div>
+            `;
+            document.getElementById('stamp-info').innerText = '';
+            document.getElementById('stamp-description').innerHTML =
+`Compressionism: The Art of Distilled Essence
+
+We navigate a world saturated with data. The promise of infinite information has manifested as an unrelenting digital deluge, where fleeting content and ephemeral platforms erode focus and devalue meaning. In this relentless overflow, genuine signal struggles to pierce the noise.
+
+From this critical juncture, Compressionism emerges – not merely as an aesthetic, but as a crucial artistic discipline, a technical philosophy, and a defiant act of cultural preservation. While the term was crystallized by digital artist Jams2Blues, its spirit echoes through decades of digital creativity, from the dithered gradients on an Apple II, through Andy Warhol's Amiga experiments, to the earliest ASCII art on ARPANET.
+
+Compressionism is the conscious craft of reducing complexity to its most potent, technically compact, and enduring form.
+
+Compressionism, The Craft of Intentional Reduction.
+At its core it is both, abstractly "saying more with less" and technical mastery of doing so. It is the art of strategic reduction, where constraints are not limitations but catalysts for ingenuity. A Compressionist doesn't just simplify; they meticulously distill, embracing the inherent artifacts of the process – the glitch, the pixelation, the limited palette – as integral components of the artwork's character and message.
+
+The movement, while codified just recently, draws from deep roots:
+
+1. Pioneering Digital Graphics: The resourceful techniques of early computer artists—dithering to simulate more colors than available, the stark constraints of character-based art, the deliberate pixel placement on low-resolution screens—are foundational.
+
+2. The Logic of Data Compression: Algorithms like JPEG, GIF, and MP3, designed to shrink data by identifying and reducing redundancy (often through lossy methods), provide a technical and philosophical template. Compressionists embrace these principles in their creative process.
+
+3. Philosophical Minimalism & Technical Pragmatism: While Zen and modernist poetry offer parallels in valuing essence, Compressionism is deeply pragmatic, focusing on the how of reduction through technical skill and an acceptance of the medium's inherent properties. Where maximalism sprawls, Compressionism condenses. It's about the elegance of the compact, the power of the well-chosen pixel, and the lasting impact of a message stripped bare to its essential truth, often revealed through its technical constraints.
+
+Compressionism manifests as a unified approach, where art, technology, and a philosophy of permanence are inextricably linked:
+
+* Art: Embracing the Artifact, Celebrating Constraint
+  For the Compressionist artist, the limitations of digital media are not flaws to be overcome but expressive tools. Pixelation isn't a bug; it's a texture. Limited color palettes aren't restrictive; they force deliberate, impactful choices. Glitches and compression artifacts are not errors but potential aesthetic signatures. Think of 24x24 pixel sprites conveying complex narratives, or ASCII art where character limitations forge unique visual languages. The beauty lies in the ingenuity born from scarcity.
+
+* Technology: The Code as Chisel, The Algorithm as Brush
+  Compressionists are often technically adept, viewing code not just as infrastructure but as a primary creative medium. They leverage image quantizers, palette optimization, and an understanding of file formats. Generative code art, where algorithms produce complex visuals from compact instruction sets, is a prime candidate for Compressionist expression. The ability to create shared, on-chain libraries of code (as explored with Bitcoin Stamps) allows artists to build upon common, hyper-efficient foundations, ensuring a level playing field defined by creative coding within strict data limits.
+
+* Philosophy: Permanence as Protest, Preservation as Defiance
+  In an era of link rot, deplatforming, and data decay, the Compressionist demands permanence. This isn't mere nostalgia; it's a profound understanding of the importance of preserving artistic expression and cultural ideas for future generations, untampered and uncensored. The act of committing art to an immutable ledger is an act of defiance against the ephemeral nature of mainstream digital culture and centralized control over information.
+
+For the Compressionist seeking ultimate permanence, Bitcoin Stamps present the "golden canvas." Unlike Ordinals, which bind data to individual satoshis (a metadata layer reliant on social consensus rather than Bitcoin's core protocol, making their permanence debatable), Bitcoin Stamps embed data directly within Bitcoin's Unspent Transaction Output (UTXO) set.
+
+* Extreme, Protocol-Level Permanence: Data stamped into a UTXO becomes part of Bitcoin's fundamental ledger. Full Bitcoin nodes store and validate the UTXO set to prevent double-spending. This means the data isn't merely referenced; it's an intrinsic part of the blockchain's state, making it impossible to prune or alter. It is, arguably, the most extreme and durable method of data storage known to mankind.
+
+* "Canvas Made of Digital Gold": When data is stamped into a UTXO, that output, to carry the data, is rendered unspendable in the traditional monetary sense. The Bitcoin used to create this data-bearing UTXOs (by making the output itself a data carrier) is effectively removed from liquid circulation. This has a deflationary micro-effect, transforming a piece of the Bitcoin ledger itself into a permanent, costly, and therefore valuable, artistic medium. The canvas isn't just on Bitcoin; it is Bitcoin.
+
+* Tamper-Proof and Immutable: Once stamped and confirmed through sufficient network confirmations, the data is cryptographically secured and distributed across thousands of nodes. It cannot be altered, revised, or censored by any single entity. It remains forever independently verifiable.
+
+* A Legacy of On-Chain Assets: The technical approach for Bitcoin Stamps leverages an account system of Counterparty protocol, a protocol that has been enabling the creation of assets on Bitcoin since 2014 – long before the mainstream NFT boom. Legends like RARE PEPEs and fakerares, have origin here. Visionaries like JP Janssen were exploring concepts of onchain "NFTs" at time it was not yet a household term.
+
+* Embracing "Ruthless" Constraints: While the theoretical limit for Bitcoin Stamps can be around 65KB (and potentially unlimited with recursive techniques), the true Compressionist spirit often thrives within even tighter self-imposed or community-defined limits. A prime example is the NSIdirectory.com legacy index for Stamp art, which curates pieces under a strict 7KB limit – a testament to "ruthless compressionism."
+
+Bitcoin Stamps are not just a storage solution; they are a philosophical match for Compressionism, demanding an economy of expression while offering unparalleled endurance. The technical nature of Compressionism, particularly its embrace of code, finds a perfect partner in Bitcoin Stamps for generative art. Masterpieces like Art Blocks' Fidenzas, which are essentially compact algorithms generating vast visual complexity, can be stamped on-chain. Furthermore, the Stamp ecosystem allows for the creation of shared, immutable code libraries. Artists can call upon these pre-stamped functions and tools, fostering a collaborative environment where complex generative works can be built from hyper-efficient, shared primitives, all living permanently on the Bitcoin blockchain.
+
+While Jams2Blues coined the term and has been pivotal in its articulation through his Ethereum onchain collection along with a growing cohort of artists are embracing the Compressionist ethos. Figures like Peng1, Ella, 0xdiid, and @Maniinng are exploring the frontiers of minimal form and maximal meaning.
+
+Time to explore the golden canvas friends! The NSIdirectory serves as a vital indexing and curatorial hub, showcasing the burgeoning creativity within these deliberate constraints.
+
+In a digital landscape defined by fleeting trends and centralized vulnerabilities, Compressionism offers a powerful counter-narrative. It is a protest against disposability, a commitment to artistic integrity, and a deep understanding of our responsibility to future generations. By stamping their work onto the most resilient ledger humanity has devised, Compressionists are not just creating art; they are forging time capsules, ensuring that the distilled essence of our era—its anxieties, its insights, its defiance—can be witnessed, studied, and understood by those who come after us, in its original, unaltered form. This is art as an act of profound foresight and cultural responsibility.
+
+A COMPRESSIONIST'S MANIFESTO
+
+We, the Compressionists, arise from a lineage of digital alchemists and signal weavers, children of the phosphor glow and the dial-up tone. We have witnessed the birth of worlds in ASCII, the ghost of Warhol in Amiga pixels, the elegant dance of dithering on screens of old.
+
+Now, in an epoch drowning in its own data, we declare: Essence is resilience. Brevity is strength. Permanence is our protest.
+
+The datasphere overflows, a chaotic torrent threatening to dilute all distinction, erase all memory. We reject this entropy. Our imperative is to distill, to encode, to stamp our mark against the tide of the ephemeral.
+
+Our Creed:
+
+1. Embrace the Constraint, Master the Artifact: The limited palette is our spectrum. The pixel is our atom. The glitch is not error, but texture. The 65KB limit is not a cage, but a crucible. We find freedom in the finite, power in precision. Every byte must justify its existence.
+
+2. Code is Clay, Algorithm is Chisel: We wield the logic of reduction. Generative scripts become poetry. Shared, stamped libraries are our common tongue. We sculpt with data, painting with the raw instructions that give form to vision.
+
+3. The UTXO is Our Unyielding Canvas: We choose the Bitcoin Stamp not for trend, but for truth. Our art is not merely linked to the chain; it is fused with it, woven into the Unspent Transaction Outputs. This is not a fleeting inscription on a social layer; this is data carved into the bedrock of Bitcoin itself.
+
+4. This Canvas is Digital Gold: Each Stamp consumes a piece of the finite ledger, a fragment of Bitcoin's potential, burning it into a vessel of pure, immutable data. This act is costly, deliberate, and deflationary. Our art resides on a canvas made of digital gold, its permanence bought with the very essence of the network.
+
+5. Permanence is Our Defiance: Against the decaying archive, the censored thought, the 404-page-not-found of history, we stamp our truths. Our works are forged to outlast platforms, regimes, and the slow bit-rot of neglect. They are independently verifiable, forever. This is our rebellion against the disposable.
+
+6. For the Future's Gaze: We do not create for the fleeting scroll of today alone. We compress and stamp for the archaeologists of tomorrow, for the generations who will seek the undiluted signals of our time. What is essential must endure.
+
+We are the descendants of the first pixel pushers, the heirs of the ARPANET poets. We understand that true impact is not measured in terabytes consumed, but in truths conveyed. We reject bloat. We champion density. We demand endurance.
+
+Let the compression be ruthless. Let the stamps be struck with intention. Let our art, etched in digital gold, testify through the ages: This was us. This was our signal. This truth is now immutable.
+
+Compress. Stamp. Endure. Onward.`;
+            document.getElementById('stamp-desc').innerText = '';
+            currentStampIndex = -1; // Reset to -1
+            updateCounter();
+            updateActiveThumbnail();
+            document.getElementById('stamp-description-container').classList.remove('visible');
+            document.getElementById('stamp-desc-container').classList.remove('visible');
+            dataButtonContainer.classList.remove('visible');
+            overlay.classList.remove('active');
+        }
+        function toggleStampDescription() {
+            const descriptionContainer = document.getElementById('stamp-description-container');
+            const descContainer = document.getElementById('stamp-desc-container');
+            const isOpen = descriptionContainer.classList.contains('visible');
+            descriptionContainer.classList.toggle('visible', !isOpen);
+            descContainer.classList.remove('visible');
+            descriptionContainer.style.display = !isOpen ? 'block' : 'none';
+            descContainer.style.display = 'none';
+            if (!isOpen) descriptionContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        function toggleStampDesc() {
+            const descContainer = document.getElementById('stamp-desc-container');
+            const descriptionContainer = document.getElementById('stamp-description-container');
+            const isOpen = descContainer.classList.contains('visible');
+            descContainer.classList.toggle('visible', !isOpen);
+            descriptionContainer.classList.remove('visible');
+            descContainer.style.display = !isOpen ? 'block' : 'none';
+            descriptionContainer.style.display = 'none';
+            if (!isOpen) descContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        // Keyboard navigation
+        document.addEventListener('keydown', (event) => {
+            const overlay = document.getElementById('zoomed-overlay');
+            if (overlay.classList.contains('active')) {
+                // Close zoomed image on arrow key press if zoomed
+                const img = document.querySelector('.zoomed');
+                if (img) {
+                    img.classList.remove('zoomed');
+                    overlay.classList.remove('active');
+                }
+            }
+            if (event.key === 'ArrowLeft') {
+                navigateStamp(-1);
+            } else if (event.key === 'ArrowRight') {
+                navigateStamp(1);
+            }
+        });
+        // Initialize counter, intro text, and thumbnail gallery
+        updateCounter();
+        resetForm();
+        createThumbnailGallery();
+    </script>
+</body>
+</html>
