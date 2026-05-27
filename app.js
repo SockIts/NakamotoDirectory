@@ -204,7 +204,7 @@ function createAssetElement(asset, className = 'library-tile') {
 }
 
 function openLightboxFromPreview() {
-  const media = preview.firstElementChild;
+  const media = preview.querySelector('.preview-asset');
   if (!media) return;
 
   const clone = media.cloneNode(true);

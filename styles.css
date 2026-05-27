@@ -142,7 +142,7 @@ body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Courie
 .lightbox.open { display: flex; }
 .lightbox > img, .lightbox > iframe {
   max-width: min(96vw, 1400px);
-  min-width: 50vw;
+  min-width: 70vw;
   max-height: 92vh;
   width: auto;
   height: auto;
